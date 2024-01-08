@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mfer sprite</title>
+    <style>
+      html,
+      body {
+        box-sizing: border-box;
+        image-rendering: pixelated !important;
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding: 0 1rem;
+      }
+
+      canvas {
+        width: 100%;
+        max-width: 400px;
+        border: 0.25rem solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <canvas id="output-canvas"></canvas>
+    </main>
+    <script>
+      const TILE_SIZE = 16
+      const CANVAS_WIDTH = 100
+      const CANVAS_HEIGHT = 100
+
+      const canvas = document.getElementById('output-canvas')
+      canvas.width = CANVAS_WIDTH
+      canvas.height = CANVAS_HEIGHT
+
+      const ctx = canvas.getContext('2d')
+      ctx.imageSmoothingEnabled = false
+
+      const spritesheet = new Image()
+      spritesheet.src = 'mfer-spritesheet.png'
+
+      const sprites = [
+        { row: 0, frameCount: 23 },
+        { row: 1, frameCount: 4 },
+        { row: 2, frameCount: 4 },
+        { row: 3, frameCount: 4 },
+      ]
+
+      const outputSprite = 0
+      const outputX = 5
+      const outputY = 0
+      const outputScale = 6
+
+      let totalFrames = 0
+
+      setInterval(() => {
+        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+
+        const spriteFrame = totalFrames % sprites[outputSprite].frameCount
+
+        ctx.drawImage(
+          spritesheet, // image element
+          TILE_SIZE * spriteFrame, // sub-rectangle x
+          TILE_SIZE * sprites[outputSprite].row, // sub-rectangle y
+          TILE_SIZE, // sub-rectangle width
+          TILE_SIZE, // sub-rectangle height
+          outputX, // destination x
+          outputY, // destination y
+          TILE_SIZE * outputScale, // destination width
+          TILE_SIZE * outputScale // destination height
+        )
+
+        totalFrames++
+      }, 1000 / 10)
+    </script>
+  </body>
+</html>
