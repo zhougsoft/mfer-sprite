@@ -15,10 +15,16 @@
 
       main {
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         height: 100vh;
         padding: 0 1rem;
+      }
+
+      h1,
+      p {
+        margin: 0;
       }
 
       canvas {
@@ -30,12 +36,30 @@
   </head>
   <body>
     <main>
+      <em>
+        <h1>an mfer spritesheet</h1>
+        <p>by zhoug</p>
+      </em>
+      <select id="animation-selector">
+        <option value="0">spin</option>
+        <option value="1">walk down</option>
+        <option value="2">walk right</option>
+        <option value="3">walk up</option>
+        <option value="4">walk left</option>
+      </select>
+      <br />
       <canvas id="output-canvas"></canvas>
+      <a href="mfer-spritesheet.png" download="mfer-spritesheet.png">
+        u can download it
+      </a>
+      <small>it's cc0!</small>
     </main>
     <script>
       const TILE_SIZE = 16
       const CANVAS_WIDTH = 100
       const CANVAS_HEIGHT = 100
+
+      let outputAnimation = 0
 
       const canvas = document.getElementById('output-canvas')
       canvas.width = CANVAS_WIDTH
@@ -47,14 +71,19 @@
       const spritesheet = new Image()
       spritesheet.src = 'mfer-spritesheet.png'
 
+      const animationSelector = document.getElementById('animation-selector')
+      animationSelector.addEventListener('change', event => {
+        outputAnimation = parseInt(event.target.value)
+      })
+
       const sprites = [
-        { row: 0, frameCount: 23 },
-        { row: 1, frameCount: 4 },
-        { row: 2, frameCount: 4 },
-        { row: 3, frameCount: 4 },
+        { row: 0, frameCount: 23 }, // spin
+        { row: 1, frameCount: 4 }, // walk down
+        { row: 2, frameCount: 4 }, // walk left
+        { row: 3, frameCount: 4 }, // walk up
+        { row: 4, frameCount: 4 }, // walk right
       ]
 
-      const outputSprite = 0
       const outputX = 5
       const outputY = 0
       const outputScale = 6
@@ -64,18 +93,19 @@
       setInterval(() => {
         ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 
-        const spriteFrame = totalFrames % sprites[outputSprite].frameCount
+        const spriteFrame = totalFrames % sprites[outputAnimation].frameCount
 
+        // prettier-ignore
         ctx.drawImage(
-          spritesheet, // image element
-          TILE_SIZE * spriteFrame, // sub-rectangle x
-          TILE_SIZE * sprites[outputSprite].row, // sub-rectangle y
-          TILE_SIZE, // sub-rectangle width
-          TILE_SIZE, // sub-rectangle height
-          outputX, // destination x
-          outputY, // destination y
-          TILE_SIZE * outputScale, // destination width
-          TILE_SIZE * outputScale // destination height
+          spritesheet,                              // image element
+          TILE_SIZE * spriteFrame,                  // sub-rectangle x
+          TILE_SIZE * sprites[outputAnimation].row, // sub-rectangle y
+          TILE_SIZE,                                // sub-rectangle width
+          TILE_SIZE,                                // sub-rectangle height
+          outputX,                                  // destination x
+          outputY,                                  // destination y
+          TILE_SIZE * outputScale,                  // destination width
+          TILE_SIZE * outputScale                   // destination height
         )
 
         totalFrames++
